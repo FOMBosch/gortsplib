@@ -77,6 +77,10 @@ type Session struct {
 	// FEC groups (RFC5109).
 	FECGroups []SessionFECGroup
 
+	// RFC 2326 §10.2: set session-level aggregate control URL so
+	// that RFC-compliant clients use URL with trailing slash
+	Control string
+
 	// Media streams.
 	Medias []*Media
 }
@@ -215,6 +219,15 @@ func (d Session) Marshal() ([]byte, error) {
 		sout.Attributes = append(sout.Attributes, sdp.Attribute{
 			Key:   "group",
 			Value: "FEC " + strings.Join(group, " "),
+		})
+	}
+
+	// RFC 2326 §10.2: session-level aggregate control URL.
+	// Emitted before media descriptions so clients parse it as session-scope.
+	if d.Control != "" {
+		sout.Attributes = append(sout.Attributes, sdp.Attribute{
+			Key:   "control",
+			Value: d.Control,
 		})
 	}
 
