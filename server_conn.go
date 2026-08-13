@@ -360,10 +360,6 @@ func (sc *ServerConn) handleRequestInner(req *base.Request) (*base.Response, err
 					}, err
 				}
 
-				// RFC 2326 §10.2: set session-level aggregate control URL so
-				// that RFC-compliant clients use URL with trailing slash
-				desc.Control = req.URL.String() + "/"
-
 				var byts []byte
 				byts, err = desc.Marshal()
 				if err != nil {
